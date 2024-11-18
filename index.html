@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Repositories Fetcher</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fff;
+      width: 300px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin: 5px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>GitHub Repos Finder</h2>
+    <form id="github-form">
+      <input type="text" id="username" placeholder="Github username..." required />
+      <button type="submit">Fetch Repos</button>
+    </form>
+    <ul id="repo-list"></ul>
+  </div>
+
+  <script>
+    document.getElementById('github-form').addEventListener('submit', function(e) {
+      e.preventDefault();  
+      const username = document.getElementById('username').value;
+      
+      
+      fetch('https://api.github.com/users/' + username + '/repos')
+        .then(response => response.json())
+        .then(data => {
+          const repoList = document.getElementById('repo-list');
+          repoList.innerHTML = '';  
+
+          
+          data.forEach(repo => {
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = repo.html_url;
+            link.target = '_blank';
+            link.textContent = repo.name;
+            listItem.appendChild(link);
+            repoList.appendChild(listItem);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+        });
+    });
+  </script>
+</body>
+</html>
